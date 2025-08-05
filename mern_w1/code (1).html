@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inclusive Shopping Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --text: #1f2937;
+      --bg: #f9fafb;
+      --card: #ffffff;
+    }
+    .dark-mode {
+      --primary: #818cf8;
+      --text: #f3f4f6;
+      --bg: #111827;
+      --card: #1f2937;
+    }
+    .high-contrast {
+      --primary: #0000ff;
+      --text: #000000;
+      --bg: #ffffff;
+      --card: #ffffff;
+    }
+    .listening {
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors">
+  <div class="container mx-auto p-4 max-w-4xl">
+    <!-- Header -->
+    <header class="bg-[var(--primary)] text-white p-4 rounded-t-lg flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Inclusive Shopping Assistant</h1>
+      <div class="flex gap-2">
+        <button id="themeToggle" class="p-2 bg-white/20 rounded-full">🌓</button>
+        <button id="contrastToggle" class="p-2 bg-white/20 rounded-full">🎨</button>
+        <select id="languageSelect" class="bg-white/20 text-white border-none rounded-full px-2">
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="hi">हिन्दी</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- Chat Container -->
+    <div class="bg-[var(--card)] p-4 h-96 overflow-y-auto" id="chatContainer">
+      <div class="message ai bg-gray-100 text-[var(--text)] rounded-lg p-3 mb-2 max-w-[80%]">
+        Welcome! How can I help you shop today?
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="bg-[var(--primary)] p-4 rounded-b-lg flex gap-2">
+      <input 
+        type="text" 
+        id="userInput"
+        class="flex-1 p-3 rounded-lg border-none"
+        placeholder="Type or speak your request..."
+        aria-label="Type your shopping query">
+      <button 
+        id="voiceBtn"
+        class="bg-white text-[var(--primary)] p-3 rounded-lg hover:bg-gray-100 transition"
+        aria-label="Voice search">
+        🎤
+      </button>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4" id="productGrid"></div>
+  </div>
+
+  <script>
+    // Translations
+    const translations = {
+      en: {
+        welcome: "Welcome! How can I help you shop today?",
+        placeholder: "Type or speak your request...",
+        listening: "Listening...",
+        productsFound: "I found these products for you:",
+        noProducts: "No products found. Try a different search.",
+        themeToggle: "Toggle theme",
+        contrastToggle: "Toggle high contrast"
+      },
+      es: {
+        welcome: "¡Bienvenido! ¿Cómo puedo ayudarte a comprar hoy?",
+        placeholder: "Escribe o di tu solicitud...",
+        listening: "Escuchando...",
+        productsFound: "Encontré estos productos para ti:",
+        noProducts: "No se encontraron productos. Intenta con otra búsqueda.",
+        themeToggle: "Cambiar tema",
+        contrastToggle: "Cambiar contraste"
+      },
+      hi: {
+        welcome: "आपका स्वागत है! आज मैं आपकी खरीदारी में कैसे मदद कर सकता हूँ?",
+        placeholder: "अपना अनुरोध टाइप करें या बोलें...",
+        listening: "सुन रहा हूँ...",
+        productsFound: "मुझे आपके लिए ये उत्पाद मिले:",
+        noProducts: "कोई उत्पाद नहीं मिला। कृपया अलग खोज करें।",
+        themeToggle: "थीम बदलें",
+        contrastToggle: "कंट्रास्ट बदलें"
+      }
+    };
+
+    // Product Database
+    const products = {
+      headphones: [
+        { name: "Wireless Headphones", price: 89.99, desc: "Noise-cancelling with 30hr battery", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" },
+        { name: "Sports Earbuds", price: 49.99, desc: "Sweat-proof, secure fit", img: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300" }
+      ],
+      dresses: [
+        { name: "Summer Dress", price: 39.99, desc: "Lightweight floral dress", img: "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=300" },
+        { name: "Formal Gown", price: 129.99, desc: "Elegant evening dress", img: "https://images.unsplash.com/photo-1539533018447-63fcce2678e4?w=300" }
+      ]
+    };
+
+    // DOM Elements
+    const chatContainer = document.getElementById('chatContainer');
+    const userInput = document.getElementById('userInput');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const productGrid = document.getElementById('productGrid');
+    const themeToggle = document.getElementById('themeToggle');
+    const contrastToggle = document.getElementById('contrastToggle');
+    const languageSelect = document.getElementById('languageSelect');
+
+    // App State
+    let currentLang = 'en';
+    let recognition;
+    let isListening = false;
+
+    // Initialize
+    function init() {
+      // Load preferences
+      currentLang = localStorage.getItem('lang') || 'en';
+      document.documentElement.className = localStorage.getItem('theme') || '';
+      languageSelect.value = currentLang;
+      
+      // Set translations
+      updateTranslations();
+      
+      // Setup voice recognition
+      setupVoiceRecognition();
+      
+      // Event listeners
+      userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') processQuery(userInput.value);
+      });
+      
+      themeToggle.addEventListener('click', toggleTheme);
+      contrastToggle.addEventListener('click', toggleContrast);
+      languageSelect.addEventListener('change', changeLanguage);
+    }
+
+    // Voice Recognition
+    function setupVoiceRecognition() {
+      if ('webkitSpeechRecognition' in window) {
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = `${currentLang}-${currentLang.toUpperCase()}`;
+
+        recognition.onstart = () => {
+          isListening = true;
+          voiceBtn.classList.add('listening');
+          voiceBtn.setAttribute('aria-label', translations[currentLang].listening);
+          addMessage('assistant', translations[currentLang].listening);
+        };
+
+        recognition.onresult = (e) => {
+          const transcript = e.results[0][0].transcript;
+          userInput.value = transcript;
+          processQuery(transcript);
+        };
+
+        recognition.onend = () => {
+          isListening = false;
+          voiceBtn.classList.remove('listening');
+          voiceBtn.setAttribute('aria-label', 'Voice search');
+        };
+
+        voiceBtn.addEventListener('click', () => {
+          if (!isListening) {
+            recognition.start();
+          } else {
+            recognition.stop();
+          }
+        });
+      } else {
+        voiceBtn.style.display = 'none';
+      }
+    }
+
+    // Process user queries
+    function processQuery(query) {
+      addMessage('user', query);
+      userInput.value = '';
+      
+      // Simple intent recognition
+      const queryLower = query.toLowerCase();
+      
+      if (queryLower.includes('headphone') || queryLower.includes('earbud')) {
+        showProducts('headphones');
+      } 
+      else if (queryLower.includes('dress') || queryLower.includes('gown')) {
+        showProducts('dresses');
+      }
+      else {
+        addMessage('assistant', translations[currentLang].noProducts);
+      }
+    }
+
+    // Display products
+    function showProducts(category) {
+      const items = products[category] || [];
+      addMessage('assistant', translations[currentLang].productsFound);
+      
+      productGrid.innerHTML = items.map(product => `
+        <div class="bg-[var(--card)] p-4 rounded-lg shadow" tabindex="0">
+          <img src="${product.img}" alt="${product.desc}" class="w-full h-48 object-cover mb-2">
+          <h3 class="font-bold">${product.name}</h3>
+          <p class="text-gray-500 text-sm">${product.desc}</p>
+          <p class="font-bold text-[var(--primary)] mt-2">$${product.price.toFixed(2)}</p>
+          <button class="mt-2 bg-[var(--primary)] text-white py-1 px-3 rounded text-sm">
+            Add to Cart
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // Add message to chat
+    function addMessage(sender, text) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${sender} ${
+        sender === 'user' ? 
+        'ml-auto bg-[var(--primary)] text-white' : 
+        'mr-auto bg-gray-100 text-[var(--text)]'
+      } rounded-lg p-3 mb-2 max-w-[80%]`;
+      messageDiv.textContent = text;
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Toggle dark/light theme
+    function toggleTheme() {
+      if (document.documentElement.classList.contains('dark-mode')) {
+        document.documentElement.classList.remove('dark-mode');
+        localStorage.setItem('theme', '');
+      } else {
+        document.documentElement.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark-mode');
+      }
+    }
+
+    // Toggle high contrast
+    function toggleContrast() {
+      if (document.documentElement.classList.contains('high-contrast')) {
+        document.documentElement.classList.remove('high-contrast');
+      } else {
+        document.documentElement.classList.add('high-contrast');
+      }
+      localStorage.setItem('theme', document.documentElement.className);
+    }
+
+    // Change language
+    function changeLanguage() {
+      currentLang = languageSelect.value;
+      localStorage.setItem('lang', currentLang);
+      updateTranslations();
+      
+      if (recognition) {
+        recognition.lang = `${currentLang}-${currentLang.toUpperCase()}`;
+      }
+    }
+
+    // Update all text to current language
+    function updateTranslations() {
+      userInput.placeholder = translations[currentLang].placeholder;
+      themeToggle.setAttribute('aria-label', translations[currentLang].themeToggle);
+      contrastToggle.setAttribute('aria-label', translations[currentLang].contrastToggle);
+      
+      // Update existing messages
+      const welcomeMsg = chatContainer.querySelector('.message.ai');
+      if (welcomeMsg) {
+        welcomeMsg.textContent = translations[currentLang].welcome;
+      }
+    }
+
+    // Initialize the app
+    init();
+  </script>
+</body>
+</html>

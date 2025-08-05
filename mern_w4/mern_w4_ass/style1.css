@@ -1,0 +1,158 @@
+body {
+  background: #F5F8FD;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  color: #1B2330;
+}
+
+.navbar {
+  width: 100%;
+  background: #DBECF4;
+  padding: 15px 0;
+  box-sizing: border-box;
+  overflow: auto;
+  border-bottom: 1.5px solid #B6D6E6;
+}
+
+.brand {
+  font-size: 22px;
+  font-weight: bold;
+  color: #4978A5;
+  padding-left: 40px;
+  float: left;
+}
+
+.navlinks {
+  width: 330px;
+  margin: 0 auto;
+  text-align: center;
+  display: inline-block;
+}
+
+.navlinks a {
+  color: #4978A5;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 0 16px;
+}
+
+.social-links {
+  float: right;
+  padding-right: 38px;
+}
+
+.social-links a {
+  color: #4978A5;
+  text-decoration: none;
+  margin-left: 10px;
+  font-size: 17px;
+}
+
+.hero {
+  margin: 60px auto 0 auto;
+  width: 80%;
+  min-width: 320px;
+  height: 350px;
+  position: relative;
+}
+
+.hero-text {
+  display: inline-block;
+  width: 40%;
+  min-width: 250px;
+  vertical-align: top;
+  margin-top: 40px;
+}
+
+.hero-text p {
+  font-size: 18px;
+  margin: 0 0 20px 0;
+}
+
+.hero-text h1 {
+  margin: 0 0 18px 0;
+  font-size: 48px;
+  color: #194360;
+  letter-spacing: 0.5px;
+  line-height: 1.05;
+}
+
+.hero-text button {
+  margin-top: 20px;
+  padding: 11px 32px;
+  font-size: 16px;
+  border-radius: 7px;
+  background: #F5FAE5;
+  border: 1.5px solid #A4C674;
+  color: #37582D;
+  box-shadow: 0 3px 0 #D7EFC0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+
+.hero-photo-box {
+  float: right;
+  width: 160px;
+  height: 160px;
+  border: 2px solid #B6D6E6;
+  background: #EAF7FD;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-left: 30px;
+}
+
+.hero-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 0; /* Ensures it's a box, not a circle */
+}
+
+
+
+
+.decor-1 {
+  position: absolute;
+  left: 26px;
+  bottom: 24px;
+  color: #86A3B9;
+  font-size: 23px;
+  font-weight: bold;
+  font-family: monospace;
+  letter-spacing: 2px;
+}
+.decor-2 {
+  position: absolute;
+  top: 14px;
+  right: 36px;
+  color: #AEBF88;
+  font-size: 19px;
+  letter-spacing: 7px;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.about-box {
+  width: 70%;
+  margin: 50px auto 0 auto;
+  background: #E3F2FD;
+  border: 2px solid #B6D6E6;
+  border-radius: 12px;
+  padding: 32px 28px 22px 28px;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.about-box h2 {
+  margin-top: 0;
+  color: #194360;
+  font-size: 28px;
+}
+
+.about-box p {
+  font-size: 17px;
+  margin-bottom: 16px;
+  line-height: 1.65;
+}
