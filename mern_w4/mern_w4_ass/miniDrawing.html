@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>House, Mountains, Grass, Sun, Sky and a Tree</title>
+  <style>
+    /* Sky background */
+    body {
+      background: #92dff3; /* light blue color */
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sun */
+    .sun {
+      position: absolute;
+      left: 75vw;  /* moves the sun to the right */
+      top: 40px;   /* moves the sun down from the top */
+      width: 100px;
+      height: 100px;
+      background: #ffe066; /* yellow */
+      border-radius: 50%;  /* circle */
+      box-shadow: 0 0 60px 15px #fffbe5; /* glow effect */
+    }
+
+    /* Big mountain */
+    .mountain1 {
+      position: absolute;
+      left: 60px;          /* moves it to the right */
+      bottom: 170px;       /* moves it up from bottom */
+      width: 0;            
+      height: 0;
+      border-left: 120px solid transparent;  /* left border invisible */
+      border-right: 120px solid transparent; /* right border invisible */
+      border-bottom: 220px solid #b0a375;    /* bottom border forms the triangle, brown */
+      z-index: 1;           /* layer order: behind house */
+    }
+
+    /* Medium mountain */
+    .mountain2 {
+      position: absolute;
+      left: 180px;
+      bottom: 175px;
+      width: 0;
+      height: 0;
+      border-left: 100px solid transparent;
+      border-right: 100px solid transparent;
+      border-bottom: 170px solid #aaa;   /* gray */
+      z-index: 2;
+      opacity: 0.7;                      /* a bit see-through */
+    }
+
+    /* Small mountain */
+    .mountain3 {
+      position: absolute;
+      left: 320px;
+      bottom: 170px;
+      width: 0;
+      height: 0;
+      border-left: 60px solid transparent;
+      border-right: 60px solid transparent;
+      border-bottom: 90px solid #d5caaa;  /* light brown */
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* Grass field at the bottom */
+    .grass {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100vw;
+      height: 170px;
+      background: #56d246;  /* green */
+      z-index: 3;
+    }
+
+    /* House - the yellow box */
+    .house {
+      position: absolute;
+      left: 300px;
+      bottom: 120px;
+      width: 130px;
+      height: 90px;
+      background: #fecc4c;  /* yellow */
+      border: 2px solid #876f36; /* darker border */
+      border-radius: 8px;
+      z-index: 4;
+    }
+
+    /* Roof - triangle over the house */
+    .roof {
+      position: absolute;
+      left: 290px;
+      bottom: 202px;
+      width: 0;
+      height: 0;
+      border-left: 75px solid transparent;  /* left triangle side is invisible */
+      border-right: 75px solid transparent; /* right triangle side is invisible */
+      border-bottom: 55px solid #a82a12;    /* triangle roof, red */
+      z-index: 5;
+    }
+
+    /* Door - small rectangle */
+    .door {
+      position: absolute;
+      left: 355px;
+      bottom: 120px;
+      width: 28px;
+      height: 40px;
+      background: #8b5c2f; /* brown */
+      border-radius: 6px 6px 4px 4px;
+      z-index: 6;
+      border: 2px solid #6f4b23;
+    }
+
+    /* Windows - 2 blue squares */
+    .windowL, .windowR {
+      position: absolute;
+      bottom: 155px;
+      width: 26px;
+      height: 26px;
+      background: #c9ebfa; /* light blue for glass */
+      border: 2px solid #7ab8e1;
+      border-radius: 4px;
+      z-index: 6;
+    }
+    .windowL { left: 317px; }
+    .windowR { left: 387px; }
+
+    /* Chimney - small rectangle on roof */
+    .chimney {
+      position: absolute;
+      left: 385px;
+      bottom: 235px;
+      width: 10px;
+      height: 25px;
+      background: #b46517;
+      border-radius: 2px;
+      z-index: 7;
+    }
+
+    /* Clouds - white ovals for the sky */
+    .cloud {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.75;
+    }
+    .cloud1 { left: 180px; top: 65px; width: 60px; height: 30px; }
+    .cloud2 { left: 210px; top: 55px; width: 40px; height: 24px; }
+    .cloud3 { left: 900px; top: 90px; width: 55px; height: 28px; }
+
+    /* Tree trunk - brown rectangle */
+    .tree-trunk {
+      position: absolute;
+      left: 490px;
+      bottom: 145px;
+      width: 18px;
+      height: 55px;
+      background: #7c4c17;
+      border-radius: 5px;
+      z-index: 7;
+    }
+    /* Tree leaves - green circle with shades */
+    .tree-leaves {
+      position: absolute;
+      left: 472px;
+      bottom: 180px;
+      width: 55px;
+      height: 55px;
+      background: #288c36;
+      border-radius: 50%;
+      z-index: 8;
+      box-shadow:
+        20px -16px 0 0 #288c36,
+        -15px -10px 0 0 #388f2f;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sun -->
+  <div class="sun"></div>
+  <!-- Clouds -->
+  <div class="cloud cloud1"></div>
+  <div class="cloud cloud2"></div>
+  <div class="cloud cloud3"></div>
+  <!-- Mountains: Big, Medium, Small -->
+  <div class="mountain1"></div>
+  <div class="mountain2"></div>
+  <div class="mountain3"></div>
+  <!-- Grass at the bottom -->
+  <div class="grass"></div>
+  <!-- House elements (roof, chimney, building, door, windows) -->
+  <div class="roof"></div>
+  <div class="chimney"></div>
+  <div class="house"></div>
+  <div class="door"></div>
+  <div class="windowL"></div>
+  <div class="windowR"></div>
+  <!-- Tree (trunk and leaves together) -->
+  <div class="tree-trunk"></div>
+  <div class="tree-leaves"></div>
+</body>
+</html>
