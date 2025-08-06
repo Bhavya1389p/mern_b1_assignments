@@ -68,18 +68,7 @@
       z-index: 6;
       border: 2px solid #6f4b23;
     }
-    .windowL, .windowR {
-      position: absolute;
-      bottom: 155px;
-      width: 26px;
-      height: 26px;
-      background: #c9ebfa;
-      border: 2px solid #7ab8e1;
-      border-radius: 4px;
-      z-index: 6;
-    }
-    .windowL { left: 647px; }
-    .windowR { left: 717px; }
+
     .cloud {
       position: absolute;
       background: #fff;
@@ -115,13 +104,13 @@
   </style>
 </head>
 <body>
-  <!-- Sun -->
+  
   <div class="sun"></div>
-  <!-- Clouds -->
+
   <div class="cloud cloud1"></div>
   <div class="cloud cloud2"></div>
   <div class="cloud cloud3"></div>
-  <!-- Mountains: much bigger! -->
+
   <div class="mountain" style="
     left: 40px; bottom: 0;
     border-left: 220px solid transparent;
@@ -138,15 +127,11 @@
     z-index: 2;
   "></div>
 
-  <!-- Grass -->
+
   <div class="grass"></div>
-  <!-- House (roof, walls, door, windows) -->
   <div class="roof"></div>
   <div class="house"></div>
   <div class="door"></div>
-  <div class="windowL"></div>
-  <div class="windowR"></div>
-  <!-- Tree -->
   <div class="tree-trunk"></div>
   <div class="tree-leaves"></div>
 </body>
